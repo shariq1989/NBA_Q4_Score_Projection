@@ -99,7 +99,13 @@ public class boxScoreFetcher {
 		}
 		// Fourth quarter scores are forecasted here
 		projectQ4();
-		printData();
+		// printData();
+		// bulls celtics
+		takeRequest(23, 26, 33, 34, 30, 26);
+		// jazz nets
+		takeRequest(22, 26, 37, 23, 17, 17);
+		// clippers knicks
+		takeRequest(31, 24, 31, 24, 21, 19);
 
 	}
 
@@ -112,15 +118,26 @@ public class boxScoreFetcher {
 		}
 		System.out.println("Standard Deviation " + stats.getStandardDeviation());
 		System.out.println("Max " + stats.getMin());
-		System.out.println("1st Standard Deviation " + stats.getPercentile(.2));
-		System.out.println("2nd Standard Deviation " + stats.getPercentile(2.3));
-		System.out.println("3rd Standard Deviation " + stats.getPercentile(15.9));
-		System.out.println("Quadratic Mean " + stats.getQuadraticMean());
-		System.out.println("1st Standard Deviation " + stats.getPercentile(84.1));
-		System.out.println("2nd Standard Deviation " + stats.getPercentile(97.7));
-		System.out.println("3rd Standard Deviation " + stats.getPercentile(99.8));
+		System.out.println("3 Standard Deviation " + stats.getPercentile(.2));
+		System.out.println("2 Standard Deviation " + stats.getPercentile(2.3));
+		System.out.println("1 Standard Deviation " + stats.getPercentile(15.9));
+		System.out.println("Mean " + stats.getMean());
+		System.out.println("1 Standard Deviation " + stats.getPercentile(84.1));
+		System.out.println("2 Standard Deviation " + stats.getPercentile(97.7));
+		System.out.println("3 Standard Deviation " + stats.getPercentile(99.8));
 		System.out.println("Max " + stats.getMax());
-		System.out.println(Arrays.toString(stats.getSortedValues()));
+		// System.out.println(Arrays.toString(stats.getSortedValues()));
+
+		// for graphing data
+		/**
+		 * List<Integer> intList = new ArrayList<Integer>(); for (int i = 0; i <
+		 * stats.getSortedValues().length; i++) { intList.add((int)
+		 * stats.getSortedValues()[i]); }
+		 * 
+		 * int oldVal = 0; for (int val : intList) { int frequency =
+		 * Collections.frequency(intList, val); if (oldVal != val) {
+		 * System.out.println(frequency); } oldVal = val; }
+		 **/
 	}
 
 	public static void projectQ4() {
@@ -129,6 +146,32 @@ public class boxScoreFetcher {
 			score.varianceFromMean = (score.meanProjectedQ4 - score.scoreQ4);
 			stats.addValue(score.varianceFromMean);
 		}
+	}
+
+	public static void takeRequest(int t1Q1, int t1Q2, int t1Q3, int t2Q1, int t2Q2, int t2Q3) {
+		BoxScoreModel scoreRequestT1 = new BoxScoreModel();
+		BoxScoreModel scoreRequestT2 = new BoxScoreModel();
+
+		scoreRequestT1.scoreQ1 = t1Q1;
+		scoreRequestT1.scoreQ2 = t1Q2;
+		scoreRequestT1.scoreQ3 = t1Q3;
+		scoreRequestT1.meanProjectedQ4 = (scoreRequestT1.scoreQ1 + scoreRequestT1.scoreQ2 + scoreRequestT1.scoreQ3) / 3;
+		System.out.println("Mean Projected T1: " + scoreRequestT1.meanProjectedQ4);
+
+		scoreRequestT2.scoreQ1 = t2Q1;
+		scoreRequestT2.scoreQ2 = t2Q2;
+		scoreRequestT2.scoreQ3 = t2Q3;
+		scoreRequestT2.meanProjectedQ4 = (scoreRequestT2.scoreQ1 + scoreRequestT2.scoreQ2 + scoreRequestT2.scoreQ3) / 3;
+		System.out.println("Mean Projected T2: " + scoreRequestT2.meanProjectedQ4);
+
+		double projectedTotal = (scoreRequestT1.scoreQ1 + scoreRequestT1.scoreQ2 + scoreRequestT1.scoreQ3 + scoreRequestT1.meanProjectedQ4)
+				+ (scoreRequestT2.scoreQ1 + scoreRequestT2.scoreQ2 + scoreRequestT2.scoreQ3 + scoreRequestT2.meanProjectedQ4);
+
+		System.out.println("Projected total: " + projectedTotal);
+		System.out.println("Mean Adusted Projection " + (projectedTotal + stats.getMean()));
+		System.out.println("1 SV Range: " + (stats.getPercentile(15.9) + projectedTotal) + " - " + (stats.getPercentile(84.1) + projectedTotal));
+		System.out.println("2 SV Range: " + (stats.getPercentile(2.3) + projectedTotal) + " - " + (stats.getPercentile(97.7) + projectedTotal));
+
 	}
 
 	public static void main(String[] args) {
